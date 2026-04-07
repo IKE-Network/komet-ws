@@ -55,5 +55,16 @@ components:
         relationship: build
         version-property: tinkar-core.version
 
+  rocks-kb:
+    type: software
+    description: >
+      rocks-kb component.
+    repo: https://github.com/ikmdev/rocks-kb.git
+    version: "0.1.0-SNAPSHOT"
+    groupId: dev.ikm.ike
+    depends-on:
+      - component: tinkar-core
+        relationship: build
+
 groups:
-  all: [ike-bom, tinkar-core, tinkar-composer]
+  all: [ike-bom, tinkar-core, tinkar-composer, rocks-kb]

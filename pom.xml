@@ -87,6 +87,19 @@
             </subprojects>
         </profile>
 
+    
+        <profile>
+            <id>with-rocks-kb</id>
+            <activation>
+                <file>
+                    <exists>${project.basedir}/rocks-kb/pom.xml</exists>
+                </file>
+            </activation>
+            <subprojects>
+                <subproject>rocks-kb</subproject>
+            </subprojects>
+        </profile>
+
     </profiles>
 
 </project>
