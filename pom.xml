@@ -74,6 +74,19 @@
             </subprojects>
         </profile>
 
+    
+        <profile>
+            <id>with-tinkar-composer</id>
+            <activation>
+                <file>
+                    <exists>${project.basedir}/tinkar-composer/pom.xml</exists>
+                </file>
+            </activation>
+            <subprojects>
+                <subproject>tinkar-composer</subproject>
+            </subprojects>
+        </profile>
+
     </profiles>
 
 </project>

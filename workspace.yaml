@@ -43,5 +43,17 @@ components:
     groupId: dev.ikm.tinkar
     depends-on: []
 
+  tinkar-composer:
+    type: software
+    description: >
+      tinkar-composer component.
+    repo: https://github.com/ikmdev/tinkar-composer.git
+    version: "1.14.0-SNAPSHOT"
+    groupId: dev.ikm.tinkar
+    depends-on:
+      - component: tinkar-core
+        relationship: build
+        version-property: tinkar-core.version
+
 groups:
-  all: [ike-bom, tinkar-core]
+  all: [ike-bom, tinkar-core, tinkar-composer]
