@@ -1,0 +1,25 @@
+# komet-ws .gitignore
+# ═══════════════════
+#
+# Ignore everything, whitelist only workspace-owned files.
+# Component repos are independent git repos cloned by ws:init.
+
+# ── Ignore everything by default ─────────────────────────────────
+*
+
+# ── Whitelist workspace-level files ──────────────────────────────
+!.gitignore
+!pom.xml
+!workspace.yaml
+!README.adoc
+!GOALS.md
+!mvnw
+!mvnw.cmd
+
+# ── Whitelist workspace-owned directories ────────────────────────
+!.mvn/
+!.mvn/**
+!checkpoints/
+!checkpoints/**
+!.run/
+!.run/**

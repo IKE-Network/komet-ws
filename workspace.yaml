@@ -1,0 +1,29 @@
+# workspace.yaml — komet-ws
+# ══════════════════════════════
+#
+# komet-ws
+#
+# Bootstrap:
+#   git clone https://github.com/<org>/komet-ws.git
+#   cd komet-ws
+#   mvn ws:init
+#   mvn clean install
+
+schema-version: "1.0"
+generated: 2026-04-07
+
+defaults:
+  branch: main
+  maven-version: "4.0.0-rc-5"
+
+component-types:
+  software:
+    description: "Java libraries and applications"
+    build-command: "mvn clean install"
+    checkpoint-mechanism: git-tag
+
+components:
+  # Add components with: mvn ws:add -Drepo=<git-url>
+
+groups:
+  all: []

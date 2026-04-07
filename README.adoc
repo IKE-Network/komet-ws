@@ -1,0 +1,33 @@
+= komet-ws
+:toc:
+:toc-placement!:
+
+komet-ws
+
+toc::[]
+
+== Bootstrap
+
+[source,bash]
+----
+git clone https://github.com/<org>/komet-ws.git
+cd komet-ws
+mvn ws:init         # <1>
+mvn clean install   # <2>
+----
+<1> Clones all component repos in dependency order; installs Maven
+    wrapper and JVM config per component.
+<2> Builds the full stack.
+
+== Workspace Commands
+
+All `ws:` goals appear in the IntelliJ Maven tool window
+(under _Plugins > ws_). Double-click any goal to run it.
+
+[source,bash]
+----
+mvn ws:status           # Git status across components
+mvn ws:dashboard        # Full workspace health check
+mvn ws:add -Drepo=      # Add a component repo
+mvn ws:upgrade          # Upgrade workspace conventions
+----
