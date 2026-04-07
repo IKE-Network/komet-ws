@@ -48,6 +48,19 @@
 
     <!-- Profiles are added by ws:add -->
     <profiles>
+    
+        <profile>
+            <id>with-ike-bom</id>
+            <activation>
+                <file>
+                    <exists>${project.basedir}/ike-bom/pom.xml</exists>
+                </file>
+            </activation>
+            <subprojects>
+                <subproject>ike-bom</subproject>
+            </subprojects>
+        </profile>
+
     </profiles>
 
 </project>

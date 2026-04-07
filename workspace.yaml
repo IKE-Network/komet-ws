@@ -25,5 +25,14 @@ component-types:
 components:
   # Add components with: mvn ws:add -Drepo=<git-url>
 
+  ike-bom:
+    type: software
+    description: >
+      ike-bom component.
+    repo: https://github.com/knowledge-graphlet/ike-bom.git
+    version: "3.0.7-SNAPSHOT"
+    groupId: dev.ikm.ike
+    depends-on: []
+
 groups:
-  all: []
+  all: [ike-bom]
