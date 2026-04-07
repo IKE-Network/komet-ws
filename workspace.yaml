@@ -66,5 +66,18 @@ components:
       - component: tinkar-core
         relationship: build
 
+  komet:
+    type: software
+    description: >
+      komet component.
+    repo: https://github.com/ikmdev/komet.git
+    version: "1.59.0-SNAPSHOT"
+    groupId: dev.ikm.komet
+    depends-on:
+      - component: tinkar-core
+        relationship: build
+      - component: tinkar-composer
+        relationship: build
+
 groups:
-  all: [ike-bom, tinkar-core, tinkar-composer, rocks-kb]
+  all: [ike-bom, tinkar-core, tinkar-composer, rocks-kb, komet]

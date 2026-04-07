@@ -100,6 +100,19 @@
             </subprojects>
         </profile>
 
+    
+        <profile>
+            <id>with-komet</id>
+            <activation>
+                <file>
+                    <exists>${project.basedir}/komet/pom.xml</exists>
+                </file>
+            </activation>
+            <subprojects>
+                <subproject>komet</subproject>
+            </subprojects>
+        </profile>
+
     </profiles>
 
 </project>
