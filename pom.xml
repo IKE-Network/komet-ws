@@ -61,6 +61,19 @@
             </subprojects>
         </profile>
 
+    
+        <profile>
+            <id>with-tinkar-core</id>
+            <activation>
+                <file>
+                    <exists>${project.basedir}/tinkar-core/pom.xml</exists>
+                </file>
+            </activation>
+            <subprojects>
+                <subproject>tinkar-core</subproject>
+            </subprojects>
+        </profile>
+
     </profiles>
 
 </project>
