@@ -79,5 +79,22 @@ components:
       - component: tinkar-composer
         relationship: build
 
+  komet-desktop:
+    type: software
+    description: >
+      komet-desktop component.
+    repo: https://github.com/ikmdev/komet-desktop.git
+    version: "3.0.0-SNAPSHOT"
+    groupId: dev.ikm.ike
+    depends-on:
+      - component: tinkar-core
+        relationship: build
+      - component: tinkar-composer
+        relationship: build
+      - component: rocks-kb
+        relationship: build
+      - component: komet
+        relationship: build
+
 groups:
-  all: [ike-bom, tinkar-core, tinkar-composer, rocks-kb, komet]
+  all: [ike-bom, tinkar-core, tinkar-composer, rocks-kb, komet, komet-desktop]
