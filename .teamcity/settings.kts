@@ -51,6 +51,11 @@ object AggregatorDeploy : BuildType({
 
     steps {
         maven {
+            name = "Clone components"
+            goals = "ws:init"
+            mavenVersion = auto()
+        }
+        maven {
             name = "Deploy to Nexus"
             goals = "clean deploy"
             runnerArgs = "-DskipTests -T4"
@@ -87,6 +92,11 @@ object InstallerMacOS : BuildType({
 
     steps {
         maven {
+            name = "Clone components"
+            goals = "ws:init"
+            mavenVersion = auto()
+        }
+        maven {
             name = "Build macOS Installer"
             goals = "clean verify"
             runnerArgs = "-pl komet-desktop -DskipTests"
@@ -121,6 +131,11 @@ object InstallerWindows : BuildType({
     }
 
     steps {
+        maven {
+            name = "Clone components"
+            goals = "ws:init"
+            mavenVersion = auto()
+        }
         maven {
             name = "Build Windows Installer"
             goals = "clean verify"
