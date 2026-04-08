@@ -96,7 +96,7 @@ object InstallerMacOS : BuildType({
                 set -euo pipefail
                 export HOME="${'$'}{HOME:-/Users/ike}"
                 ./mvnw ws:init
-                ./mvnw clean verify -pl komet-desktop -DskipTests
+                ./mvnw clean verify -pl komet-desktop -DskipTests -Pjlink-standard,create-desktop-installer
             """.trimIndent()
         }
     }
@@ -135,7 +135,7 @@ object InstallerWindows : BuildType({
                 set -euo pipefail
                 export HOME="${'$'}{HOME:-/Users/ike}"
                 ./mvnw ws:init
-                ./mvnw clean verify -pl komet-desktop -DskipTests
+                ./mvnw clean verify -pl komet-desktop -DskipTests -Pjlink-standard,create-desktop-installer
             """.trimIndent()
         }
     }
