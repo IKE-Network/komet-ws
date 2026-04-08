@@ -54,8 +54,9 @@ object AggregatorDeploy : BuildType({
             scriptContent = """
                 #!/bin/bash
                 set -euo pipefail
+                export HOME="${'$'}{HOME:-/Users/ike}"
                 ./mvnw ws:init
-                ./mvnw clean deploy -DskipTests -T4
+                ./mvnw clean deploy -DskipTests -T4 -pl '!.teamcity'
             """.trimIndent()
         }
     }
@@ -93,6 +94,7 @@ object InstallerMacOS : BuildType({
             scriptContent = """
                 #!/bin/bash
                 set -euo pipefail
+                export HOME="${'$'}{HOME:-/Users/ike}"
                 ./mvnw ws:init
                 ./mvnw clean verify -pl komet-desktop -DskipTests
             """.trimIndent()
@@ -131,6 +133,7 @@ object InstallerWindows : BuildType({
             scriptContent = """
                 #!/bin/bash
                 set -euo pipefail
+                export HOME="${'$'}{HOME:-/Users/ike}"
                 ./mvnw ws:init
                 ./mvnw clean verify -pl komet-desktop -DskipTests
             """.trimIndent()
