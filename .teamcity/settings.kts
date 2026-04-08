@@ -5,7 +5,7 @@ import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
 import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
 
-version = "2024.12"
+version = "2025.11"
 
 project {
     description = "komet-ws workspace — multi-platform build & release pipeline"
