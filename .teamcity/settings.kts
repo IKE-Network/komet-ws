@@ -1,6 +1,5 @@
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
-import jetbrains.buildServer.configs.kotlin.buildSteps.maven
 import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
 import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
@@ -50,16 +49,14 @@ object AggregatorDeploy : BuildType({
     }
 
     steps {
-        maven {
-            name = "Clone components"
-            goals = "ws:init"
-            mavenVersion = auto()
-        }
-        maven {
-            name = "Deploy to Nexus"
-            goals = "clean deploy"
-            runnerArgs = "-DskipTests -T4"
-            mavenVersion = auto()
+        script {
+            name = "Clone components and deploy"
+            scriptContent = """
+                #!/bin/bash
+                set -euo pipefail
+                ./mvnw ws:init
+                ./mvnw clean deploy -DskipTests -T4
+            """.trimIndent()
         }
     }
 
@@ -91,16 +88,14 @@ object InstallerMacOS : BuildType({
     }
 
     steps {
-        maven {
-            name = "Clone components"
-            goals = "ws:init"
-            mavenVersion = auto()
-        }
-        maven {
-            name = "Build macOS Installer"
-            goals = "clean verify"
-            runnerArgs = "-pl komet-desktop -DskipTests"
-            mavenVersion = auto()
+        script {
+            name = "Clone components and build installer"
+            scriptContent = """
+                #!/bin/bash
+                set -euo pipefail
+                ./mvnw ws:init
+                ./mvnw clean verify -pl komet-desktop -DskipTests
+            """.trimIndent()
         }
     }
 
@@ -131,16 +126,14 @@ object InstallerWindows : BuildType({
     }
 
     steps {
-        maven {
-            name = "Clone components"
-            goals = "ws:init"
-            mavenVersion = auto()
-        }
-        maven {
-            name = "Build Windows Installer"
-            goals = "clean verify"
-            runnerArgs = "-pl komet-desktop -DskipTests"
-            mavenVersion = auto()
+        script {
+            name = "Clone components and build installer"
+            scriptContent = """
+                #!/bin/bash
+                set -euo pipefail
+                ./mvnw ws:init
+                ./mvnw clean verify -pl komet-desktop -DskipTests
+            """.trimIndent()
         }
     }
 
