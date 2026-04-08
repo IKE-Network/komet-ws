@@ -23,3 +23,5 @@
 !checkpoints/**
 !.run/
 !.run/**
+!.teamcity/
+!.teamcity/**
