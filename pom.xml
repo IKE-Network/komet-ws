@@ -27,8 +27,8 @@
     <name>komet-ws</name>
 
     <properties>
-        <ike-tooling.version>76</ike-tooling.version>
-        <ike-pipeline.version>64</ike-pipeline.version>
+        <ike-tooling.version>78</ike-tooling.version>
+        <ike-pipeline.version>68</ike-pipeline.version>
     </properties>
 
     <build>
