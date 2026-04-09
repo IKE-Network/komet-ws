@@ -33,7 +33,9 @@ components:
     repo: https://github.com/ikmdev/tinkar-core.git
     version: "1.127.2-SNAPSHOT"
     groupId: dev.ikm.tinkar
-    depends-on: []
+    depends-on:
+      - component: komet-bom
+        relationship: build
 
   tinkar-composer:
     type: software
@@ -55,6 +57,8 @@ components:
     version: "0.1.0-SNAPSHOT"
     groupId: dev.ikm.ike
     depends-on:
+      - component: komet-bom
+        relationship: build
       - component: tinkar-core
         relationship: build
 
@@ -66,6 +70,8 @@ components:
     version: "1.59.0-SNAPSHOT"
     groupId: dev.ikm.komet
     depends-on:
+      - component: komet-bom
+        relationship: build
       - component: tinkar-core
         relationship: build
       - component: tinkar-composer
@@ -79,6 +85,8 @@ components:
     version: "3.0.0-SNAPSHOT"
     groupId: dev.ikm.ike
     depends-on:
+      - component: komet-bom
+        relationship: build
       - component: tinkar-core
         relationship: build
       - component: tinkar-composer
