@@ -24,8 +24,7 @@ under **Plugins > ws** and **Plugins > ike**.
 |------|-------------|
 | `ws:verify` | Check manifest, parents, BOM cascade, VCS state |
 | `ws:verify-convergence` | Full verify + transitive dependency convergence (slow) |
-| `ws:status` | Git status across all components |
-| `ws:dashboard` | Combined verify + status + cascade overview |
+| `ws:overview` | Workspace overview (manifest, graph, status, cascade) |
 | `ws:cascade` | Show downstream impact of a component change |
 
 ## Version Alignment
