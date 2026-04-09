@@ -25,14 +25,6 @@ component-types:
 components:
   # Add components with: mvn ws:add -Drepo=<git-url>
 
-  ike-bom:
-    type: software
-    description: >
-      ike-bom component.
-    repo: https://github.com/knowledge-graphlet/ike-bom.git
-    version: "3.0.7-SNAPSHOT"
-    groupId: dev.ikm.ike
-    depends-on: []
 
   tinkar-core:
     type: software
@@ -96,5 +88,14 @@ components:
       - component: komet
         relationship: build
 
+  komet-bom:
+    type: software
+    description: >
+      komet-bom component.
+    repo: https://github.com/ikmdev/komet-bom.git
+    version: "3.0.7-SNAPSHOT"
+    groupId: dev.ikm.komet
+    depends-on: []
+
 groups:
-  all: [ike-bom, tinkar-core, tinkar-composer, rocks-kb, komet, komet-desktop]
+  all: [tinkar-core, tinkar-composer, rocks-kb, komet, komet-desktop, komet-bom]
