@@ -12,7 +12,9 @@
 !pom.xml
 !workspace.yaml
 !README.adoc
+!CLAUDE.md
 !CLAUDE-*.md
+!GOALS.md
 !mvnw
 !mvnw.cmd
 
