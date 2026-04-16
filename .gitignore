@@ -27,3 +27,14 @@
 !.run/**
 !.teamcity/
 !.teamcity/**
+
+# ── IntelliJ project config (curated slice) ──────────────────────
+# Small, stable project-wide settings shared across collaborators.
+# compiler.xml and vcs.xml are excluded — they regenerate per
+# Maven reload or per workspace membership.
+!.idea/
+!.idea/.gitignore
+!.idea/misc.xml
+!.idea/kotlinc.xml
+!.idea/encodings.xml
+!.idea/jarRepositories.xml

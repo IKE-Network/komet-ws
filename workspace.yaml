@@ -107,3 +107,9 @@ components:
 
 groups:
   all: [tinkar-core, tinkar-composer, rocks-kb, komet, komet-desktop, komet-bom]
+
+# IntelliJ project settings shared across collaborators. Enforced by
+# ws:upgrade-publish on every run (updates .idea/misc.xml).
+# komet-ws uses --enable-preview, so language level must be *_PREVIEW.
+ide:
+  language-level: JDK_25_PREVIEW
