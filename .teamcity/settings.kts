@@ -1,6 +1,5 @@
 import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
-import jetbrains.buildServer.configs.kotlin.buildSteps.maven
 import jetbrains.buildServer.configs.kotlin.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.triggers.vcs
 import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
@@ -10,13 +9,13 @@ import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
  *
  * Topology:
  *   1. AggregatorDeploy  — mvn deploy (Mac Studio)
- *   2a. InstallerMacOS   — mvn verify -pl komet-desktop (Mac Studio, .pkg)
- *   2b. InstallerWindows — mvn verify -pl komet-desktop (Windows agent, .msi)
+ *   2a. InstallerMacOS   — ws:init + mvn install with signing/notarization (Mac Studio, .pkg)
+ *   2b. InstallerWindows — ws:init + mvn install (Windows agent, .msi)
  *   3. PublishRelease    — gh release create/upload + Zulip notification (Mac Studio)
  *
  * Triggers on:
  *   - Release tags:     refs/tags/v*
- *   - Checkpoint tags:  refs/tags/checkpoint/*  (pending ike-issues#66)
+ *   - Checkpoint tags:  refs/tags/checkpoint/*
  *
  * PLUG-AND-PLAY: To reuse for another workspace, update the github.repo
  * parameter and the VCS root URL.
@@ -37,7 +36,7 @@ project {
     params {
         param("github.repo", "IKE-Network/komet-ws")
         password("env.GITHUB_TOKEN", "", display = ParameterDisplay.HIDDEN,
-            label = "GitHub PAT (repo scope on IKE-Network)")
+            label = "GitHub PAT (contents:write on IKE-Network)")
         password("env.ZULIP_BOT_EMAIL", "", display = ParameterDisplay.HIDDEN,
             label = "Zulip bot email")
         password("env.ZULIP_BOT_TOKEN", "", display = ParameterDisplay.HIDDEN,
@@ -46,6 +45,10 @@ project {
         param("zulip.stream", "builds")
         password("env.CODESIGN_KEYCHAIN_PASSWORD", "", display = ParameterDisplay.HIDDEN,
             label = "macOS login keychain password (unlocks codesign cert)")
+        password("env.APPLE_ID", "", display = ParameterDisplay.HIDDEN,
+            label = "Apple ID email for notarization")
+        password("env.APPLE_APP_SPECIFIC_PWD", "", display = ParameterDisplay.HIDDEN,
+            label = "Apple app-specific password for notarization")
     }
 }
 
@@ -58,6 +61,7 @@ object WorkspaceVcs : GitVcsRoot({
         +:refs/tags/checkpoint/*
     """.trimIndent()
     pollInterval = 60
+    useTagsAsBranches = true
 })
 
 object AggregatorDeploy : BuildType({
@@ -69,11 +73,14 @@ object AggregatorDeploy : BuildType({
     }
 
     steps {
-        maven {
-            name = "Deploy to Nexus"
-            goals = "clean deploy"
-            runnerArgs = "-DskipTests -T4"
-            mavenVersion = auto()
+        script {
+            name = "Clone components and deploy to Nexus"
+            scriptContent = """
+                #!/bin/bash
+                set -euo pipefail
+                ./mvnw network.ike.pipeline:ike-workspace-maven-plugin:init -f pom.xml
+                ./mvnw clean deploy -DskipTests -T4 -f pom.xml
+            """.trimIndent()
         }
     }
 
@@ -83,6 +90,7 @@ object AggregatorDeploy : BuildType({
                 +:refs/tags/v*
                 +:refs/tags/checkpoint/*
             """.trimIndent()
+            param("teamcity.vcsTrigger.runBuildInNewEmptyBranch", "true")
         }
     }
 
@@ -98,18 +106,28 @@ object AggregatorDeploy : BuildType({
 
 object InstallerMacOS : BuildType({
     name = "Installer macOS"
-    description = "Build macOS .pkg installer via JReleaser/jpackage"
+    description = "Build macOS .pkg installer with Apple code signing and notarization"
 
     vcs {
         root(WorkspaceVcs)
     }
 
     steps {
-        maven {
-            name = "Build macOS Installer"
-            goals = "clean verify"
-            runnerArgs = "-pl komet-desktop -DskipTests"
-            mavenVersion = auto()
+        script {
+            name = "Clone components and build macOS installer"
+            scriptContent = """
+                #!/bin/bash
+                set -euo pipefail
+
+                # Unlock system keychain for codesign access (headless agent)
+                if [[ -n "${'$'}{CODESIGN_KEYCHAIN_PASSWORD:-}" ]]; then
+                    security unlock-keychain -p "${'$'}CODESIGN_KEYCHAIN_PASSWORD" /Library/Keychains/System.keychain
+                    echo "System keychain unlocked"
+                fi
+
+                ./mvnw network.ike.pipeline:ike-workspace-maven-plugin:init -f pom.xml
+                ./mvnw -P jlink-standard,create-desktop-installer -T 1C -DskipTests clean install -f pom.xml
+            """.trimIndent()
         }
     }
 
@@ -140,11 +158,20 @@ object InstallerWindows : BuildType({
     }
 
     steps {
-        maven {
-            name = "Build Windows Installer"
-            goals = "clean verify"
-            runnerArgs = "-pl komet-desktop -DskipTests"
-            mavenVersion = auto()
+        script {
+            name = "Clone components and build Windows installer"
+            scriptContent = """
+                if exist ike-bom rmdir /s /q ike-bom
+                if exist tinkar-core rmdir /s /q tinkar-core
+                if exist tinkar-composer rmdir /s /q tinkar-composer
+                if exist rocks-kb rmdir /s /q rocks-kb
+                if exist komet rmdir /s /q komet
+                if exist komet-desktop rmdir /s /q komet-desktop
+                call mvn -s C:\BuildAgent\settings.xml -U network.ike.pipeline:ike-workspace-maven-plugin:init -f pom.xml
+                if errorlevel 1 exit /b 1
+                call mvn -s C:\BuildAgent\settings.xml -P jlink-standard,create-desktop-installer -T 1C -DskipTests clean install -f pom.xml
+                if errorlevel 1 exit /b 1
+            """.trimIndent()
         }
     }
 
@@ -185,8 +212,9 @@ object PublishRelease : BuildType({
                 set -euo pipefail
 
                 REPO="%github.repo%"
-                TAG_NAME="${'$'}{BRANCH_NAME#refs/tags/}"
-                echo "Publishing: ${'$'}TAG_NAME → ${'$'}REPO"
+                TAG_NAME="%teamcity.build.vcs.branch.KometWs_KometWs%"
+                TAG_NAME="${'$'}{TAG_NAME#refs/tags/}"
+                echo "Publishing: ${'$'}TAG_NAME to ${'$'}REPO"
 
                 PRERELEASE_FLAG=""
                 if [[ "${'$'}TAG_NAME" == checkpoint/* ]]; then
@@ -226,7 +254,8 @@ object PublishRelease : BuildType({
                 #!/bin/bash
                 set -euo pipefail
 
-                TAG_NAME="${'$'}{BRANCH_NAME#refs/tags/}"
+                TAG_NAME="%teamcity.build.vcs.branch.KometWs_KometWs%"
+                TAG_NAME="${'$'}{TAG_NAME#refs/tags/}"
                 RELEASE_URL="https://github.com/%github.repo%/releases/tag/${'$'}TAG_NAME"
 
                 TYPE="Release"
@@ -283,11 +312,11 @@ object PublishRelease : BuildType({
             onDependencyFailure = FailureAction.FAIL_TO_START
         }
         artifacts(InstallerMacOS) {
-            buildRule = lastSuccessful()
+            buildRule = sameChainOrLastFinished()
             artifactRules = "installers/*.pkg => installers"
         }
         artifacts(InstallerWindows) {
-            buildRule = lastSuccessful()
+            buildRule = sameChainOrLastFinished()
             artifactRules = "installers/*.msi => installers"
         }
     }
