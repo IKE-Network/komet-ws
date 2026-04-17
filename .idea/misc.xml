@@ -10,7 +10,6 @@
     <option name="enabledProfiles">
       <list>
         <option value="jlink-standard" />
-        <option value="create-desktop-installer" />
       </list>
     </option>
   </component>

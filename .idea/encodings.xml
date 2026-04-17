@@ -117,6 +117,9 @@
     <file url="file://$PROJECT_DIR$/tinkar-core/language-extensions/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tinkar-core/language-extensions/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tinkar-core/language-extensions/src/main/resources-filtered" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tinkar-core/plugin-service-loader/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tinkar-core/plugin-service-loader/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tinkar-core/plugin-service-loader/src/main/resources-filtered" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tinkar-core/provider/changeset-writer-provider/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tinkar-core/provider/changeset-writer-provider/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tinkar-core/provider/changeset-writer-provider/src/main/resources-filtered" charset="UTF-8" />
