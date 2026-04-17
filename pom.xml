@@ -127,6 +127,26 @@
             </subprojects>
         </profile>
 
+        <!--
+            Build-speed opt-in profiles. Empty stubs here so they appear in the
+            IntelliJ Maven Profiles panel when the workspace root is selected;
+            the real profile definitions live in komet-desktop/pom.xml where
+            they gate the installer / codesign / notarize executions.
+
+              fast-dev       Fast iteration — skip installer, codesign, notarize
+              skip-codesign  Build installer but skip all signing (and notarize)
+              skip-notarize  Sign everything but skip Apple notary wait
+        -->
+        <profile>
+            <id>fast-dev</id>
+        </profile>
+        <profile>
+            <id>skip-codesign</id>
+        </profile>
+        <profile>
+            <id>skip-notarize</id>
+        </profile>
+
     </profiles>
 
 </project>

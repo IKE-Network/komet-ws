@@ -10,7 +10,7 @@
     <option name="enabledProfiles">
       <list>
         <option value="jlink-standard" />
-        <option value="create-desktop-installer" />
+        <option value="fast-dev" />
       </list>
     </option>
   </component>
