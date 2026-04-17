@@ -10,6 +10,7 @@
     <option name="enabledProfiles">
       <list>
         <option value="jlink-standard" />
+        <option value="fast-dev" />
       </list>
     </option>
   </component>
