@@ -16,13 +16,7 @@ defaults:
   branch: main
   maven-version: "4.0.0-rc-5"
 
-component-types:
-  software:
-    description: "Java libraries and applications"
-    build-command: "mvn clean install"
-    checkpoint-mechanism: git-tag
-
-components:
+subprojects:
   # Add components with: mvn ws:add -Drepo=<git-url>
 
 
@@ -35,7 +29,7 @@ components:
     version: "1.127.2-SNAPSHOT"
     groupId: dev.ikm.tinkar
     depends-on:
-      - component: komet-bom
+      - subproject: komet-bom
         relationship: build
 
   tinkar-composer:
@@ -47,7 +41,7 @@ components:
     version: "1.14.0-SNAPSHOT"
     groupId: dev.ikm.tinkar
     depends-on:
-      - component: tinkar-core
+      - subproject: tinkar-core
         relationship: build
         version-property: tinkar-core.version
 
@@ -60,9 +54,9 @@ components:
     version: "0.1.0-SNAPSHOT"
     groupId: dev.ikm.ike
     depends-on:
-      - component: komet-bom
+      - subproject: komet-bom
         relationship: build
-      - component: tinkar-core
+      - subproject: tinkar-core
         relationship: build
 
   komet:
@@ -74,11 +68,11 @@ components:
     version: "1.59.0-SNAPSHOT"
     groupId: dev.ikm.komet
     depends-on:
-      - component: komet-bom
+      - subproject: komet-bom
         relationship: build
-      - component: tinkar-core
+      - subproject: tinkar-core
         relationship: build
-      - component: tinkar-composer
+      - subproject: tinkar-composer
         relationship: build
 
   komet-desktop:
@@ -90,15 +84,15 @@ components:
     version: "3.0.0-SNAPSHOT"
     groupId: dev.ikm.ike
     depends-on:
-      - component: komet-bom
+      - subproject: komet-bom
         relationship: build
-      - component: tinkar-core
+      - subproject: tinkar-core
         relationship: build
-      - component: tinkar-composer
+      - subproject: tinkar-composer
         relationship: build
-      - component: rocks-kb
+      - subproject: rocks-kb
         relationship: build
-      - component: komet
+      - subproject: komet
         relationship: build
 
   komet-bom:
@@ -110,9 +104,6 @@ components:
     version: "3.0.7-SNAPSHOT"
     groupId: dev.ikm.komet
     depends-on: []
-
-groups:
-  all: [tinkar-core, tinkar-composer, rocks-kb, komet, komet-desktop, komet-bom]
 
 # IntelliJ project settings shared across collaborators. Enforced by
 # ws:upgrade-publish on every run (updates .idea/misc.xml).
