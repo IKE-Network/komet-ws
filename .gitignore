@@ -38,3 +38,6 @@
 !.idea/kotlinc.xml
 !.idea/encodings.xml
 !.idea/jarRepositories.xml
+
+# ws:* goal reports
+ws꞉*.md
