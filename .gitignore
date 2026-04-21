@@ -9,6 +9,7 @@
 
 # ── Whitelist workspace-level files ──────────────────────────────
 !.gitignore
+!.gitattributes
 !pom.xml
 !workspace.yaml
 !README.adoc

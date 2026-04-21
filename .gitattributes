@@ -1,0 +1,20 @@
+# Line-ending policy for komet-ws
+# ──────────────────────────────────
+#
+# Windows batch files MUST be CRLF or cmd.exe chokes — symptoms range
+# from "The system cannot find the path specified" to silent failure.
+# Without this file, mvnw.cmd checked out under core.autocrlf=false
+# (or input) is broken on Windows.
+#
+# Tracked in IKE-Network/ike-issues#189.
+
+# Windows-only: force CRLF on checkout regardless of local autocrlf
+*.cmd  text eol=crlf
+*.bat  text eol=crlf
+
+# Unix-only: force LF on checkout regardless of local autocrlf
+*.sh   text eol=lf
+mvnw   text eol=lf
+
+# Default: let git auto-detect text vs binary; normalize to LF in index
+* text=auto
