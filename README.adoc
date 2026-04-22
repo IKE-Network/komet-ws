@@ -2,32 +2,148 @@
 :toc:
 :toc-placement!:
 
-komet-ws
+Workspace aggregator for the Komet stack — IKE platform's
+JavaFX desktop knowledge-graph editor and the tinkar libraries it
+builds on.
 
 toc::[]
+
+== What's in here
+
+A Maven 4 reactor with seven cooperating component repos plus the
+workspace root itself. Each component is its own Git repository; the
+root coordinates them via `workspace.yaml` and the `ws:` plugin.
+
+[cols="1,3"]
+|===
+| Component | Purpose
+
+| `komet-bom`        | Dependency BOM consumed by the rest of the stack
+| `tinkar-core`      | Core tinkar data model, persistence (RocksDB), reasoner
+| `tinkar-composer`  | High-level authoring API over tinkar-core
+| `rocks-kb`         | Knowledge base storage and access layer
+| `komet`            | JavaFX UI components and viewer/editor framework
+| `komet-desktop`    | Packaged desktop application (macOS/Windows installers, code signing)
+| `komet-ws` (root)  | Reactor POM, `workspace.yaml`, build configuration
+|===
 
 == Bootstrap
 
 [source,bash]
 ----
-git clone https://github.com/<org>/komet-ws.git
+git clone https://github.com/IKE-Network/komet-ws.git
 cd komet-ws
-mvn ws:init         # <1>
-mvn clean install   # <2>
+mvn ws:init        # <1>
+mvn validate       # <2>
+mvn clean install  # <3>
 ----
-<1> Clones all component repos in dependency order; installs Maven
-    wrapper and JVM config per component.
-<2> Builds the full stack.
+<1> Clones every component repo in dependency order, installs the
+    Maven wrapper, sets per-component JVM options.
+<2> Unpacks current build standards into `.claude/standards/`. Read
+    these (or have Claude read them) before non-trivial work.
+<3> Builds the full stack.
 
-== Workspace Commands
+== Daily Workflow
 
-All `ws:` goals appear in the IntelliJ Maven tool window
-(under _Plugins > ws_). Double-click any goal to run it.
+These are the goals you'll touch most. Full taxonomy in
+link:GOALS.md[GOALS.md].
 
 [source,bash]
 ----
-mvn ws:status           # Git status across components
-mvn ws:dashboard        # Full workspace health check
-mvn ws:add -Drepo=      # Add a component repo
-mvn ws:upgrade          # Upgrade workspace conventions
+mvn ws:pull                              # rebase-pull every component
+mvn ws:overview                          # manifest, graph, status, cascade
+mvn ws:verify-convergence                # full health check (slow, run before release)
+mvn ws:commit -DaddAll=true \
+    -Dmessage="..."                      # commit across the workspace
+mvn ws:push                              # push every component
 ----
+
+== Common Workflows
+
+=== Bumping the parent (ike-parent) version
+
+[source,bash]
+----
+mvn ws:set-parent-draft   -Dparent.version=108   # preview
+mvn ws:set-parent-publish -Dparent.version=108   # apply edits
+mvn ws:commit -DaddAll=true -Dmessage="Bump ike-parent to 108"
+mvn ws:push
+----
+
+=== Refreshing workspace conventions
+
+After an `ike-parent` bump, run the convention upgrader. It is
+idempotent — safe to run any time.
+
+[source,bash]
+----
+mvn ws:upgrade-draft     # preview
+mvn ws:upgrade-publish   # apply (gitignore, mvnw, .gitattributes, IDE settings, plugin versions)
+----
+
+=== Feature branch across all components
+
+[source,bash]
+----
+mvn ws:feature-start-publish        -Dfeature=my-feature
+# ... work, commit per component (ws:commit / ws:push) ...
+mvn ws:feature-finish-merge-publish -Dfeature=my-feature -Dpush=true
+----
+
+Variants: `-finish-squash-*` for single commits, `-finish-rebase-*`
+for linear history, `-feature-abandon-*` to discard.
+
+=== Releasing
+
+[source,bash]
+----
+mvn ws:release-draft                       # preview the release plan
+mvn ws:release-publish -Dpush=true         # release every component with unreleased commits in dep order
+----
+
+The release set cascades: a source change in any component pulls
+all its downstream into the release, so dependents never carry stale
+upstream versions.
+
+== IntelliJ Integration
+
+Every `ws:` and `ike:` goal appears in the Maven tool window under
+*Plugins > ws* and *Plugins > ike*. Double-click any goal to run it.
+
+== Conventions and Standards
+
+- Maven 4 with POM `modelVersion` 4.1.0; root reactor uses
+  `<subprojects>` (not `<modules>`)
+- Java 25 with `--enable-preview`, uniform across components
+- Parent: `network.ike.pipeline:ike-parent` (currently version `108`)
+- Maven wrapper pinned at `4.0.0-rc-5`
+- `.teamcity/pom.xml` is intentionally excluded from the reactor via
+  `.mvn/maven.config` (`-pl !.teamcity`) — see
+  link:CLAUDE-komet-ws.md[CLAUDE-komet-ws.md]
+
+For the full standards, read `.claude/standards/MAVEN.md` and
+`.claude/standards/IKE-MAVEN.md` after `mvn validate`.
+
+== POM Edits — Use Tooling, Never `sed`
+
+POM edits go through tooling that preserves formatting:
+
+- **Inter-component versions** → `ws:align-draft` / `ws:align-publish`
+- **Parent version** → `ws:set-parent-draft` / `ws:set-parent-publish`
+- **GroupId migration** → OpenRewrite recipe
+  (`mvn rewrite:run -Drewrite.activeRecipes=network.ike.MigrateGroupIds`)
+- **External dependency versions** → edit the POM directly
+
+Never use `sed`, `awk`, or regex on POMs. The `PomRewriter` API in
+`ike-workspace-maven-plugin` uses OpenRewrite's XML LST and preserves
+whitespace, comments, and quote style.
+
+== References
+
+- link:GOALS.md[GOALS.md] — full goal reference (`ws:` and `ike:`)
+- link:CLAUDE.md[CLAUDE.md] — conventions and prohibited patterns
+- link:CLAUDE-komet-ws.md[CLAUDE-komet-ws.md] — workspace-specific notes
+  (TeamCity, code signing)
+- link:workspace.yaml[workspace.yaml] — component manifest
+- `.claude/standards/` — full build standards (after `mvn validate`)
+- `mvn ws:help` / `mvn ike:help` — list every goal with description
