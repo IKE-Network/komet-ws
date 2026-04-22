@@ -45,6 +45,41 @@
                 <artifactId>ike-workspace-maven-plugin</artifactId>
                 <!-- version from ike-parent pluginManagement -->
             </plugin>
+            <!--
+                Enforce JDK 25.0.2+ for reactor builds.
+
+                Oracle JDK 25.0.1 and earlier have JDK-8358723: jpackage omits
+                entitlements when signing nested bundles, which macOS 26.4's
+                notary service rejects ("The signature of the binary is
+                invalid." on Contents/runtime/Contents/MacOS/libjli.dylib).
+                macOS 26.3 tolerates the bug, so the issue appears only on
+                26.4+ build machines. Fixed via JDK-8369477 in OpenJDK 25.0.2
+                (January 2026 CPU) and Oracle JDK 25.0.3 (April 2026 CPU).
+
+                This rule fires only for builds invoked via komet-ws (the
+                release path). Move to ike-parent to cover all invocations.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <!-- version from ike-parent / Maven defaults -->
+                <executions>
+                    <execution>
+                        <id>enforce-java-version-for-jpackage-signing</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[25.0.2,)</version>
+                                    <message>This build requires JDK 25.0.2 or newer. Oracle JDK 25.0.1 and earlier have JDK-8358723 (jpackage signs nested bundles without entitlements), which macOS 26.4+ notarization rejects. Point JAVA_HOME at a 25.0.2+ JDK (25.0.3 recommended — April 2026 CPU) and re-run.</message>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
