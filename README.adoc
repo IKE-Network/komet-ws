@@ -77,8 +77,8 @@ idempotent — safe to run any time.
 
 [source,bash]
 ----
-mvn ws:upgrade-draft     # preview
-mvn ws:upgrade-publish   # apply (gitignore, mvnw, .gitattributes, IDE settings, plugin versions)
+mvn ws:scaffold-upgrade-draft     # preview
+mvn ws:scaffold-upgrade-publish   # apply (gitignore, mvnw, .gitattributes, IDE settings, plugin versions)
 ----
 
 === Feature branch across all components

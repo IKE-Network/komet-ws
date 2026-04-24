@@ -17,8 +17,8 @@ Use `-Dpublish=true` on any draft goal as a shortcut for the publish variant.
 | `ws:fix` | Sync workspace.yaml versions from actual POMs |
 | `ws:graph` | Print dependency graph (text or `-Dformat=dot`) |
 | `ws:stignore` | Generate Syncthing ignore rules |
-| `ws:upgrade-draft` | Preview workspace convention upgrades |
-| `ws:upgrade-publish` | Apply convention upgrades |
+| `ws:scaffold-upgrade-draft` | Preview workspace scaffold upgrades |
+| `ws:scaffold-upgrade-publish` | Apply scaffold upgrades |
 | `ws:help` | List all ws: goals with descriptions |
 
 ## Verification

@@ -106,7 +106,7 @@ subprojects:
     depends-on: []
 
 # IntelliJ project settings shared across collaborators. Enforced by
-# ws:upgrade-publish on every run (updates .idea/misc.xml).
+# ws:scaffold-upgrade-publish on every run (updates .idea/misc.xml).
 # komet-ws uses --enable-preview, so language level must be *_PREVIEW.
 ide:
   language-level: JDK_25_PREVIEW
