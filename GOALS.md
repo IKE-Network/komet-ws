@@ -70,7 +70,7 @@ Feature-finish options: `-Dpush=true` pushes to origin, `-DkeepBranch=false` del
 
 | Goal | Description |
 |------|-------------|
-| `ws:sync` | Reconcile state after machine switch |
+| `ws:sync` | Pull then push across the workspace (the daily sync op) |
 | `ws:commit` | Commit across workspace (includes workspace root) |
 | `ws:push` | Push across workspace |
 
