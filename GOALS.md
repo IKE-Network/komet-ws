@@ -10,14 +10,10 @@ Use `-Dpublish=true` on any draft goal as a shortcut for the publish variant.
 
 | Goal | Description |
 |------|-------------|
-| `ws:create` | Create a new workspace (scaffold + git init) |
+| `ws:scaffold-init` | Bootstrap a new workspace, or clone/initialize all declared subprojects (idempotent) |
 | `ws:add` | Add a subproject repo (prompts for URL) |
-| `ws:init` | Clone/initialize all subprojects |
-| `ws:fix` | Sync workspace.yaml versions from actual POMs |
 | `ws:graph` | Print dependency graph (text or DOT format) |
 | `ws:stignore` | Generate Syncthing ignore rules |
-| `ws:scaffold-upgrade-draft` | Preview workspace scaffold upgrades |
-| `ws:scaffold-upgrade-publish` | Apply scaffold upgrades |
 | `ws:remove` | Remove a subproject (prompts for name) |
 | `ws:help` | List all ws: goals with descriptions |
 
@@ -25,7 +21,6 @@ Use `-Dpublish=true` on any draft goal as a shortcut for the publish variant.
 
 | Goal | Description |
 |------|-------------|
-| `ws:verify` | Check manifest, parents, BOM cascade, VCS state |
 | `ws:verify-convergence` | Full verify + transitive dependency convergence (slow) |
 | `ws:overview` | Workspace overview (manifest, graph, status, cascade) |
 | `ws:check-branch` | Warn when a subproject branch deviates from workspace.yaml |
@@ -36,8 +31,6 @@ Use `-Dpublish=true` on any draft goal as a shortcut for the publish variant.
 |------|-------------|
 | `ws:align-draft` | Preview inter-subproject POM/branch alignment |
 | `ws:align-publish` | Apply alignment to POMs and/or branches |
-| `ws:set-parent-draft` | Preview parent-POM version cascade |
-| `ws:set-parent-publish` | Apply parent-POM version cascade (auto-commits) |
 | `ws:versions-upgrade-draft` | Preview version upgrades against the configured ruleset |
 | `ws:versions-upgrade-publish` | Apply the workspace version-upgrade plan |
 
@@ -82,7 +75,7 @@ Feature-finish options: `-Dpush=true` pushes to origin, `-DkeepBranch=false` del
 | Goal | Description |
 |------|-------------|
 | `ws:sync` | Pull then push across the workspace (the daily sync op) |
-| `ws:commit` | Commit across repos (stages all by default; `-DstagedOnly` to opt out) |
+| `ws:commit-publish` | Commit across repos (stages all by default; `-DstagedOnly` to opt out) |
 | `ws:pull` | Git pull --rebase across all subprojects |
 | `ws:push` | Push all subprojects (warns about uncommitted changes) |
 | `ws:report` | Aggregate ws:* goal reports into a single document |

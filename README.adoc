@@ -33,7 +33,7 @@ root coordinates them via `workspace.yaml` and the `ws:` plugin.
 ----
 git clone https://github.com/IKE-Network/komet-ws.git
 cd komet-ws
-mvn ws:init        # <1>
+mvn ws:scaffold-init   # <1>
 mvn validate       # <2>
 mvn clean install  # <3>
 ----
@@ -53,7 +53,7 @@ link:GOALS.md[GOALS.md].
 mvn ws:pull                              # rebase-pull every component
 mvn ws:overview                          # manifest, graph, status, cascade
 mvn ws:verify-convergence                # full health check (slow, run before release)
-mvn ws:commit -DaddAll=true \
+mvn ws:commit-publish \
     -Dmessage="..."                      # commit across the workspace
 mvn ws:push                              # push every component
 ----
@@ -64,9 +64,9 @@ mvn ws:push                              # push every component
 
 [source,bash]
 ----
-mvn ws:set-parent-draft   -Dparent.version=108   # preview
-mvn ws:set-parent-publish -Dparent.version=108   # apply edits
-mvn ws:commit -DaddAll=true -Dmessage="Bump ike-parent to 108"
+mvn ws:scaffold-draft                            # preview
+mvn ws:scaffold-publish -DparentVersion=108      # apply edits
+mvn ws:commit-publish -Dmessage="Bump ike-parent to 108"
 mvn ws:push
 ----
 
@@ -77,8 +77,8 @@ idempotent — safe to run any time.
 
 [source,bash]
 ----
-mvn ws:scaffold-upgrade-draft     # preview
-mvn ws:scaffold-upgrade-publish   # apply (gitignore, mvnw, .gitattributes, IDE settings, plugin versions)
+mvn ws:scaffold-draft     # preview
+mvn ws:scaffold-publish   # apply (gitignore, mvnw, .gitattributes, IDE settings, plugin versions)
 ----
 
 === Feature branch across all components
@@ -86,7 +86,7 @@ mvn ws:scaffold-upgrade-publish   # apply (gitignore, mvnw, .gitattributes, IDE 
 [source,bash]
 ----
 mvn ws:feature-start-publish        -Dfeature=my-feature
-# ... work, commit per component (ws:commit / ws:push) ...
+# ... work, commit per component (ws:commit-publish / ws:push) ...
 mvn ws:feature-finish-merge-publish -Dfeature=my-feature -Dpush=true
 ----
 
@@ -129,7 +129,7 @@ For the full standards, read `.claude/standards/MAVEN.md` and
 POM edits go through tooling that preserves formatting:
 
 - **Inter-component versions** → `ws:align-draft` / `ws:align-publish`
-- **Parent version** → `ws:set-parent-draft` / `ws:set-parent-publish`
+- **Parent version** → `ws:scaffold-draft` / `ws:scaffold-publish`
 - **GroupId migration** → OpenRewrite recipe
   (`mvn rewrite:run -Drewrite.activeRecipes=network.ike.MigrateGroupIds`)
 - **External dependency versions** → edit the POM directly

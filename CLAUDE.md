@@ -2,7 +2,7 @@
 
 ## First Steps
 
-Run `mvn ws:init` to clone components, then `mvn validate` to unpack
+Run `mvn ws:scaffold-init` to clone components, then `mvn validate` to unpack
 full build standards into `.claude/standards/`.
 
 ## Build
@@ -28,7 +28,7 @@ mvn clean verify -T4                # full build with tests
 - **Dependency version changes:** Use `ws:align-publish` for workspace-internal
   dependencies. For external deps, edit the POM directly
 - **Never use `sed`, `awk`, or regex-based POM manipulation** — use
-  `ws:align`, OpenRewrite, or the PomRewriter API in ike-workspace-maven-plugin
+  `ws:align-publish`, OpenRewrite, or the PomRewriter API in ike-workspace-maven-plugin
 
 ## Prohibited Patterns
 
@@ -42,7 +42,7 @@ after building.
 - **Never embed shell commands inline in POM** — extract to a named script
 - **Never use `git add -A` or `git add .`** — stage specific files
 - **Never use `sed` or manual text replacement on POM files** — use
-  `ws:align`, OpenRewrite recipes, or the Maven 4 model API
+  `ws:align-publish`, OpenRewrite recipes, or the Maven 4 model API
 
 ## Project-Specific Notes
 
